@@ -1,11 +1,12 @@
 # noted-request-handler
-
+<!--
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
+-->
 
 The [note'd app](https://note-d.app) is/will be designed to allow the user to store notes
 on their own self-hosted server.  
