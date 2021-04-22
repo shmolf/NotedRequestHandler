@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace League\Skeleton;
+namespace shmolf\NotedRequestHandler;
 
-class SkeletonClass
+class RequestHandler
 {
     /**
      * Create a new Skeleton Instance

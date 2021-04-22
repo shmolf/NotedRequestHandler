@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "id": "https://note-d.app/schema/test/note.json",
+  "title": "Representation of a Note Object",
+  "type": "object",
+  "required": ["clientUuid", "title", "content"],
+  "additionalProperties": false,
+  "properties": {
+    "noteUuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "clientUuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
