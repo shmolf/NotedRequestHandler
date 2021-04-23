@@ -45,7 +45,8 @@
     "suite": [
       "@lint",
       "@test"
-    ]
+    ],
+    "psalm-more-info": "psalm --php-version=7.4 --show-info=true"
   },
   "extra": {
     "branch-alias": {

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "id": "https://note-d.app/schema/compatibility.json",
+  "title": "API Version Compatility",
+  "type": "object",
+  "required": ["isCompatible", "version"],
+  "additionalProperties": false,
+  "properties": {
+    "isCompatible": {
+      "type": "boolean",
+      "description": "'true' declares this host is compatible with the one of the Browser's API versions."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The specific version to which this host is compatible. '0' implies no compatibility was found."
+    }
+  }
+}

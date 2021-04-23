@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "id": "https://note-d.app/schema/test/note.json",
+  "id": "https://note-d.app/schema/note.json",
   "title": "Representation of a Note Object",
   "type": "object",
   "required": ["clientUuid", "title", "content"],
