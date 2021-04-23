@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace shmolf\NotedRequestHandler\Entity;
 
 use Ramsey\Uuid\Uuid;

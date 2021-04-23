@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "id": "https://note-d.app/schema/{file}.v{version}.json",
+  "id": "https://note-d.app/schema/v{version}/{file}.json",
   "$vars": {
     "file": "note",
     "version": 1

@@ -7,6 +7,7 @@ namespace shmolf\NotedRequestHandler\Tests;
 use PHPUnit\Framework\TestCase;
 use shmolf\NotedRequestHandler\Entity\NoteEntity;
 use shmolf\NotedRequestHandler\Exception\InvalidSchemaException;
+use shmolf\NotedRequestHandler\JsonSchema\Library;
 use shmolf\NotedRequestHandler\NoteHydrator;
 
 class NoteHydratorTest extends TestCase
@@ -26,12 +27,12 @@ class NoteHydratorTest extends TestCase
     public function testServerVersionResponseHappy(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [NoteHydrator::API_VERSION],
+            'versions' => [Library::CUR_VERSION],
         ]);
 
         $libraryVersionJson = json_encode([
             'isCompatible' => true,
-            'version' => NoteHydrator::API_VERSION,
+            'version' => Library::CUR_VERSION,
         ]);
 
         $this->assertEquals($libraryVersionJson, $this->hydrator->getCompatibilityJsonResponse());
@@ -40,12 +41,12 @@ class NoteHydratorTest extends TestCase
     public function testServerVersionResponseSad(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [(NoteHydrator::API_VERSION + 1)],
+            'versions' => [(Library::CUR_VERSION + 1)],
         ]);
 
         $libraryVersionJson = json_encode([
             'isCompatible' => false,
-            'version' => NoteHydrator::API_VERSION,
+            'version' => Library::CUR_VERSION,
         ]);
 
         $this->assertEquals($libraryVersionJson, $this->hydrator->getCompatibilityJsonResponse());
@@ -54,12 +55,12 @@ class NoteHydratorTest extends TestCase
     public function testServerVersionResponseBad(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [NoteHydrator::API_VERSION],
+            'versions' => [Library::CUR_VERSION],
         ]);
 
         $libraryVersionJson = json_encode([
             'isCompatible' => 'true',
-            'version' => NoteHydrator::API_VERSION,
+            'version' => Library::CUR_VERSION,
         ]);
 
         $this->assertNotEquals($libraryVersionJson, $this->hydrator->getCompatibilityJsonResponse());

@@ -9,21 +9,10 @@ use Opis\JsonSchema\ValidationResult;
 use Opis\JsonSchema\Validator;
 use shmolf\NotedRequestHandler\Entity\NoteEntity;
 use shmolf\NotedRequestHandler\Exception\InvalidSchemaException;
+use shmolf\NotedRequestHandler\JsonSchema\Library;
 
 class NoteHydrator
 {
-    // This should be versioned when the Note schemas changes
-    public const API_VERSION = 1;
-    // This Schema can have Backwards-incompatible changes. The Client (Browser) should handle all versions.
-    private const NOTE_SCHEMA_URI = 'https://note-d.app/schema/note.v' . self::API_VERSION . '.json';
-    private const NOTE_SCHEMA_FILE = './src/JsonSchemas/note.json';
-    // This Schema should ONLY ever have additive changes
-    private const COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/compatibility.v1.json';
-    private const COMPATIBILITY_SCHEMA_FILE = './src/JsonSchemas/compatibility.json';
-    // This Schema should ONLY ever have additive changes
-    private const CLIENT_COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/client-compatibility.v1.json';
-    private const CLIENT_COMPATIBILITY_SCHEMA_FILE = './src/JsonSchemas/client-compatibility.json';
-
     private const GET = 'GET';
     private const POST = 'POST';
 
@@ -31,24 +20,35 @@ class NoteHydrator
     public const REQ_NOTE_UPSERT = 'noted-client-upsert';
 
     private Validator $validator;
+    private array $schemas;
     private ?bool $isCompatible = null;
 
     public function __construct()
     {
+        $this->schemas = Library::getCurrent();
         $this->validator = new Validator();
         $resolver = $this->validator->resolver();
 
         if ($resolver instanceof SchemaResolver) {
-            $resolver->registerFile(self::NOTE_SCHEMA_URI, self::NOTE_SCHEMA_FILE);
-            $resolver->registerFile(self::COMPATIBILITY_SCHEMA_URI, self::COMPATIBILITY_SCHEMA_FILE);
-            $resolver->registerFile(self::CLIENT_COMPATIBILITY_SCHEMA_URI, self::CLIENT_COMPATIBILITY_SCHEMA_FILE);
+            $resolver->registerFile(
+                $this->schemas['note']['uri'],
+                $this->schemas['note']['file']
+            );
+            $resolver->registerFile(
+                $this->schemas['host-compatibility']['uri'],
+                $this->schemas['host-compatibility']['file']
+            );
+            $resolver->registerFile(
+                $this->schemas['client-compatibility']['uri'],
+                $this->schemas['client-compatibility']['file']
+            );
         }
     }
 
     public function getHydratedNote(): ?NoteEntity
     {
         $requestData = $this->getRequestValue(self::POST, self::REQ_NOTE_UPSERT, '');
-        $schemaValidation = $this->validateSchema($requestData, self::NOTE_SCHEMA_URI);
+        $schemaValidation = $this->validateSchema($requestData, $this->schemas['note']['uri']);
 
         if ($schemaValidation->hasError()) {
             /** @psalm-suppress PossiblyNullArgument since 'hasError' prevents null referencing **/
@@ -76,7 +76,7 @@ class NoteHydrator
     {
         return json_encode([
             'isCompatible' => $this->versionIsSupported(),
-            'version' => self::API_VERSION,
+            'version' => Library::CUR_VERSION,
         ]);
     }
 
@@ -90,7 +90,7 @@ class NoteHydrator
      */
     public function versionIsSupported(): bool
     {
-        $this->isCompatible = $this->isCompatible ?? in_array(self::API_VERSION, $this->checkForBrowserSupport());
+        $this->isCompatible = $this->isCompatible ?? in_array(Library::CUR_VERSION, $this->checkForBrowserSupport());
         return $this->isCompatible;
     }
 
@@ -103,7 +103,7 @@ class NoteHydrator
     private function checkForBrowserSupport(): array
     {
         $requestData = (string)($this->getRequestValue(self::GET, self::REQ_API_VERSION, ''));
-        $schemaValidation = $this->validateSchema($requestData, self::CLIENT_COMPATIBILITY_SCHEMA_URI);
+        $schemaValidation = $this->validateSchema($requestData, $this->schemas['client-compatibility']['uri']);
 
         if ($schemaValidation->hasError()) {
             /** @psalm-suppress PossiblyNullArgument since 'hasError' prevents null referencing **/

@@ -9,21 +9,25 @@ use Opis\JsonSchema\Resolvers\SchemaResolver;
 use Opis\JsonSchema\ValidationResult;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
+use shmolf\NotedRequestHandler\JsonSchema\Library;
 use shmolf\NotedRequestHandler\Tests\DataObjects\ClientCompatibility;
 
 class ClientCompatibilitySchemaTest extends TestCase
 {
-    private const SCHEMA_URI = 'https://note-d.app/schema/client-compatibility.v1.json';
-    private const SCHEMA_FILE = './src/JsonSchemas/client-compatibility.json';
     private Validator $validator;
+    private array $schemas;
 
     public function setUp(): void
     {
+        $this->schemas = Library::getCurrent();
         $this->validator = new Validator();
         $resolver = $this->validator->resolver();
 
         if ($resolver instanceof SchemaResolver) {
-            $resolver->registerFile(self::SCHEMA_URI, self::SCHEMA_FILE);
+            $resolver->registerFile(
+                $this->schemas['client-compatibility']['uri'],
+                $this->schemas['client-compatibility']['file']
+            );
         }
     }
 
@@ -60,7 +64,10 @@ class ClientCompatibilitySchemaTest extends TestCase
 
         // We'll check if the $resolver is set, otherwise, we'll manully load the file.
         return $resolver instanceof SchemaResolver
-            ? $this->validator->validate($preppedData, self::SCHEMA_URI)
-            : $this->validator->validate($preppedData, file_get_contents(self::SCHEMA_FILE));
+            ? $this->validator->validate($preppedData, $this->schemas['client-compatibility']['uri'])
+            : $this->validator->validate(
+                $preppedData,
+                file_get_contents($this->schemas['client-compatibility']['file']))
+            ;
     }
 }
