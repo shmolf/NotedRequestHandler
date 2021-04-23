@@ -11,11 +11,11 @@ use shmolf\NotedRequestHandler\Exceptions\InvalidSchemaException;
 
 class NoteHydrator
 {
-    private const NOTE_SCHEMA_URI = 'https://note-d.app/schema/note.json';
+    private const NOTE_SCHEMA_URI = 'https://note-d.app/schema/note.json#1';
     private const NOTE_SCHEMA_FILE = './src/JsonSchemas/note.json';
-    private const COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/compatibility.json';
+    private const COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/compatibility.json#1';
     private const COMPATIBILITY_SCHEMA_FILE = './src/JsonSchemas/compatibility.json';
-    private const CLIENT_COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/client-compatibility.json';
+    private const CLIENT_COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/client-compatibility.json#1';
     private const CLIENT_COMPATIBILITY_SCHEMA_FILE = './src/JsonSchemas/client-compatibility.json';
     public const API_VERSION = 1; // This should be versioned when the request/response schemas change
     public const CLIENT_VERSION_REQ_KEY = 'noted-client-api-version';
@@ -60,7 +60,7 @@ class NoteHydrator
     /**
      * This function should only be called as part of the browser's request to the server, to check API compatibility.
      *
-     * @return array<array-key, int>
+     * @return int[]
      * @throws InvalidSchemaException
      */
     private function checkForBrowserSupport(): array
