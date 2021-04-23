@@ -13,7 +13,7 @@ use shmolf\NotedRequestHandler\Tests\DataObjects\Compatibility;
 
 class CompatibilitySchemaTest extends TestCase
 {
-    private const SCHEMA_URI = 'https://note-d.app/schema/compatibility.json#1';
+    private const SCHEMA_URI = 'https://note-d.app/schema/compatibility.v1.json';
     private const SCHEMA_FILE = './src/JsonSchemas/compatibility.json';
     private Validator $validator;
 

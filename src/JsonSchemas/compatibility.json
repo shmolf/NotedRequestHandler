@@ -1,6 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "id": "https://note-d.app/schema/compatibility.json#1",
+  "id": "https://note-d.app/schema/{file}.v{version}.json",
+  "$vars": {
+    "file": "compatibility",
+    "version": 1
+  },
   "title": "API Version Compatility",
   "type": "object",
   "required": ["isCompatible", "version"],

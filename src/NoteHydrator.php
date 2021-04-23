@@ -7,18 +7,28 @@ namespace shmolf\NotedRequestHandler;
 use Opis\JsonSchema\Resolvers\SchemaResolver;
 use Opis\JsonSchema\ValidationResult;
 use Opis\JsonSchema\Validator;
-use shmolf\NotedRequestHandler\Exceptions\InvalidSchemaException;
+use shmolf\NotedRequestHandler\Entity\NoteEntity;
+use shmolf\NotedRequestHandler\Exception\InvalidSchemaException;
 
 class NoteHydrator
 {
-    private const NOTE_SCHEMA_URI = 'https://note-d.app/schema/note.json#1';
+    // This should be versioned when the Note schemas changes
+    public const API_VERSION = 1;
+    // This Schema can have Backwards-incompatible changes. The Client (Browser) should handle all versions.
+    private const NOTE_SCHEMA_URI = 'https://note-d.app/schema/note.v' . self::API_VERSION . '.json';
     private const NOTE_SCHEMA_FILE = './src/JsonSchemas/note.json';
-    private const COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/compatibility.json#1';
+    // This Schema should ONLY ever have additive changes
+    private const COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/compatibility.v1.json';
     private const COMPATIBILITY_SCHEMA_FILE = './src/JsonSchemas/compatibility.json';
-    private const CLIENT_COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/client-compatibility.json#1';
+    // This Schema should ONLY ever have additive changes
+    private const CLIENT_COMPATIBILITY_SCHEMA_URI = 'https://note-d.app/schema/client-compatibility.v1.json';
     private const CLIENT_COMPATIBILITY_SCHEMA_FILE = './src/JsonSchemas/client-compatibility.json';
-    public const API_VERSION = 1; // This should be versioned when the request/response schemas change
-    public const CLIENT_VERSION_REQ_KEY = 'noted-client-api-version';
+
+    private const GET = 'GET';
+    private const POST = 'POST';
+
+    public const REQ_API_VERSION = 'noted-client-api-version';
+    public const REQ_NOTE_UPSERT = 'noted-client-upsert';
 
     private Validator $validator;
     private ?bool $isCompatible = null;
@@ -33,6 +43,33 @@ class NoteHydrator
             $resolver->registerFile(self::COMPATIBILITY_SCHEMA_URI, self::COMPATIBILITY_SCHEMA_FILE);
             $resolver->registerFile(self::CLIENT_COMPATIBILITY_SCHEMA_URI, self::CLIENT_COMPATIBILITY_SCHEMA_FILE);
         }
+    }
+
+    public function getHydratedNote(): ?NoteEntity
+    {
+        $requestData = $this->getRequestValue(self::POST, self::REQ_NOTE_UPSERT, '');
+        $schemaValidation = $this->validateSchema($requestData, self::NOTE_SCHEMA_URI);
+
+        if ($schemaValidation->hasError()) {
+            /** @psalm-suppress PossiblyNullArgument since 'hasError' prevents null referencing **/
+            throw new InvalidSchemaException($requestData, $schemaValidation->error());
+        }
+
+        $requestData = json_decode($requestData, true);
+        $note = new NoteEntity();
+        $note->title = $requestData['title'];
+        $note->content = $requestData['content'];
+        $note->setClientUuid($requestData['clientUuid']);
+
+        if (!empty($requestData['noteUuid'])) {
+            $note->setNoteUuid($requestData['noteUuid']);
+        }
+
+        if (!empty($requestData['tags'])) {
+            $note->tags = $requestData['tags'];
+        }
+
+        return $note;
     }
 
     public function getCompatibilityJsonResponse(): string
@@ -65,7 +102,7 @@ class NoteHydrator
      */
     private function checkForBrowserSupport(): array
     {
-        $requestData = (string)($_GET[self::CLIENT_VERSION_REQ_KEY] ?? '');
+        $requestData = (string)($this->getRequestValue(self::GET, self::REQ_API_VERSION, ''));
         $schemaValidation = $this->validateSchema($requestData, self::CLIENT_COMPATIBILITY_SCHEMA_URI);
 
         if ($schemaValidation->hasError()) {
@@ -85,5 +122,23 @@ class NoteHydrator
         return $resolver instanceof SchemaResolver
             ? $this->validator->validate(json_decode($jsonString), $uri)
             : $this->validator->validate(json_decode($jsonString), file_get_contents('./src/JsonSchemas/note.json'));
+    }
+
+    /**
+     * @param string $method
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed
+     */
+    private function getRequestValue(string $method, string $key, $default = null)
+    {
+        switch ($method) {
+            case self::GET:
+                return $_GET[$key] ?? $default;
+            case self::POST:
+                return $_POST[$key] ?? $default;
+            default:
+                return $_REQUEST[$key] ?? $default;
+        }
     }
 }

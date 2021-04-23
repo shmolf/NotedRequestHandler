@@ -1,6 +1,6 @@
 <?php
 
-namespace shmolf\NotedRequestHandler\Exceptions;
+namespace shmolf\NotedRequestHandler\Exception;
 
 use Exception;
 use Opis\JsonSchema\Errors\ValidationError;

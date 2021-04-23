@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace shmolf\NotedRequestHandler\Tests;
 
 use PHPUnit\Framework\TestCase;
-use shmolf\NotedRequestHandler\Exceptions\InvalidSchemaException;
+use shmolf\NotedRequestHandler\Entity\NoteEntity;
+use shmolf\NotedRequestHandler\Exception\InvalidSchemaException;
 use shmolf\NotedRequestHandler\NoteHydrator;
 
 class NoteHydratorTest extends TestCase
@@ -19,12 +20,12 @@ class NoteHydratorTest extends TestCase
 
     public function tearDown(): void
     {
-        unset($_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY]);
+        unset($_GET[NoteHydrator::REQ_API_VERSION]);
     }
 
     public function testServerVersionResponseHappy(): void
     {
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = json_encode([
+        $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
             'versions' => [NoteHydrator::API_VERSION],
         ]);
 
@@ -38,7 +39,7 @@ class NoteHydratorTest extends TestCase
 
     public function testServerVersionResponseSad(): void
     {
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = json_encode([
+        $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
             'versions' => [(NoteHydrator::API_VERSION + 1)],
         ]);
 
@@ -52,7 +53,7 @@ class NoteHydratorTest extends TestCase
 
     public function testServerVersionResponseBad(): void
     {
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = json_encode([
+        $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
             'versions' => [NoteHydrator::API_VERSION],
         ]);
 
@@ -66,7 +67,7 @@ class NoteHydratorTest extends TestCase
 
     public function testClientVersionHappy(): void
     {
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = json_encode([
+        $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
             'versions' => [1, 2],
         ]);
 
@@ -75,7 +76,7 @@ class NoteHydratorTest extends TestCase
 
     public function testClientVersionSad(): void
     {
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = json_encode([
+        $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
             'versions' => [1],
         ]);
 
@@ -86,7 +87,7 @@ class NoteHydratorTest extends TestCase
     {
         $this->expectException(InvalidSchemaException::class);
 
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = json_encode([
+        $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
             'versions' => 1,
         ]);
 
@@ -97,7 +98,7 @@ class NoteHydratorTest extends TestCase
     {
         $this->expectException(InvalidSchemaException::class);
 
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = json_encode([
+        $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
             'versions' => [0],
         ]);
 
@@ -108,8 +109,81 @@ class NoteHydratorTest extends TestCase
     {
         $this->expectException(InvalidSchemaException::class);
 
-        $_GET[NoteHydrator::CLIENT_VERSION_REQ_KEY] = 'not valid json string at all';
+        $_GET[NoteHydrator::REQ_API_VERSION] = 'not valid json string at all';
 
         $this->hydrator->versionIsSupported();
+    }
+
+    public function testNoteHydrationHappy(): void
+    {
+        $goodUuid = 'e0f9d9cf-02b3-4b8a-b5c0-ea094c07b0b9';
+
+        $noteArray = [
+            'noteUuid' => $goodUuid,
+            'clientUuid' => $goodUuid,
+            'title' => 'test title',
+            'content' => 'test content',
+            'tags' => ['tag 1', 'tag 2'],
+        ];
+
+        $testNote = new NoteEntity();
+        $testNote->setNoteUuid($goodUuid);
+        $testNote->setClientUuid($goodUuid);
+        $testNote->title = $noteArray['title'];
+        $testNote->content = $noteArray['content'];
+        $testNote->tags = $noteArray['tags'];
+
+        $_POST[NoteHydrator::REQ_NOTE_UPSERT] = json_encode($noteArray);
+
+        $generatedNote = $this->hydrator->getHydratedNote();
+
+        $this->assertEquals($testNote, $generatedNote);
+    }
+
+    public function testNoteHydrationSad(): void
+    {
+        $goodUuid = 'e0f9d9cf-02b3-4b8a-b5c0-ea094c07b0b9';
+
+        $noteArray = [
+            'clientUuid' => $goodUuid,
+            'title' => 'test title',
+            'content' => 'test content',
+        ];
+
+        $testNote = new NoteEntity();
+        $testNote->setClientUuid($goodUuid);
+        $testNote->title = $noteArray['title'];
+        $testNote->content = $noteArray['content'];
+
+        $_POST[NoteHydrator::REQ_NOTE_UPSERT] = json_encode($noteArray);
+
+        $generatedNote = $this->hydrator->getHydratedNote();
+
+        $this->assertEquals($testNote, $generatedNote);
+    }
+
+    public function testNoteHydrationBad(): void
+    {
+        $this->expectException(InvalidSchemaException::class);
+
+        $badUuid = 'this is not a valid uuid string';
+
+        // Missing a Client UUID
+        $noteArray = [
+            'clientUuid' => $badUuid,
+            'title' => 'test title',
+            'content' => 'test content',
+            'tags' => ['tag 1', 'tag 2'],
+        ];
+
+        $testNote = new NoteEntity();
+        $testNote->setClientUuid($badUuid);
+        $testNote->title = $noteArray['title'];
+        $testNote->content = $noteArray['content'];
+        $testNote->tags = $noteArray['tags'];
+
+        $_POST[NoteHydrator::REQ_NOTE_UPSERT] = json_encode($noteArray);
+
+        $this->hydrator->getHydratedNote();
     }
 }

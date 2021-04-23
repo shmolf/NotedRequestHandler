@@ -13,7 +13,7 @@ use shmolf\NotedRequestHandler\Tests\DataObjects\Note;
 
 class NoteSchemaTest extends TestCase
 {
-    private const SCHEMA_URI = 'https://note-d.app/schema/note.json#1';
+    private const SCHEMA_URI = 'https://note-d.app/schema/note.v1.json';
     private const SCHEMA_FILE = './src/JsonSchemas/note.json';
     private Validator $validator;
 
