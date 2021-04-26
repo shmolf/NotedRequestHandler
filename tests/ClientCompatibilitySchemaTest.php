@@ -4,70 +4,50 @@ declare(strict_types=1);
 
 namespace shmolf\NotedRequestHandler\Tests;
 
-use Opis\JsonSchema\Helper;
-use Opis\JsonSchema\Resolvers\SchemaResolver;
-use Opis\JsonSchema\ValidationResult;
-use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use shmolf\NotedRequestHandler\JsonSchema\Library;
 use shmolf\NotedRequestHandler\Tests\DataObjects\ClientCompatibility;
+use Swaggest\JsonSchema\Exception\ArrayException;
+use Swaggest\JsonSchema\Schema;
 
 class ClientCompatibilitySchemaTest extends TestCase
 {
-    private Validator $validator;
+    private Schema $schemaValidator;
     private array $schemas;
 
     public function setUp(): void
     {
         $this->schemas = Library::getCurrent();
-        $this->validator = new Validator();
-        $resolver = $this->validator->resolver();
-
-        if ($resolver instanceof SchemaResolver) {
-            $resolver->registerFile(
-                $this->schemas['client-compatibility']['uri'],
-                $this->schemas['client-compatibility']['file']
-            );
-        }
+        $this->schemaValidator = Schema::import(
+            json_decode(
+                file_get_contents($this->schemas['client-compatibility']['file'])
+            )
+        );
     }
 
     public function testNoteSchemaHappy(): void
     {
-        $validation = $this->validateSchema(ClientCompatibility::getHappy());
-        /** @psalm-suppress PossiblyNullReference since 'hasError' prevents null referencing **/
-        $msg = $validation->hasError() ? $validation->error()->message() : '';
+        $isValid = $this->validateSchema(json_encode(ClientCompatibility::getHappy()));
 
-        $this->assertTrue($validation->isValid(), $msg);
+        $this->assertTrue($isValid);
     }
 
     public function testNoteSchemaSad(): void
     {
-        $validation = $this->validateSchema(ClientCompatibility::getSad());
-        /** @psalm-suppress PossiblyNullReference since 'hasError' prevents null referencing **/
-        $msg = $validation->hasError() ? $validation->error()->message() : '';
+        $isValid = $this->validateSchema(json_encode(ClientCompatibility::getSad()));
 
-        $this->assertTrue($validation->isValid(), $msg);
+        $this->assertTrue($isValid);
     }
 
     public function testNoteSchemaBad(): void
     {
-        $validation = $this->validateSchema(ClientCompatibility::getBad());
-
-        $this->assertTrue($validation->hasError());
+        $this->expectException(ArrayException::class);
+        $this->validateSchema(json_encode(ClientCompatibility::getBad()));
     }
 
-    private function validateSchema(array $data): ValidationResult
+    private function validateSchema(string $json): bool
     {
-        $resolver = $this->validator->resolver();
-        /** @var array */
-        $preppedData = Helper::toJSON($data);
-
-        // We'll check if the $resolver is set, otherwise, we'll manully load the file.
-        return $resolver instanceof SchemaResolver
-            ? $this->validator->validate($preppedData, $this->schemas['client-compatibility']['uri'])
-            : $this->validator->validate(
-                $preppedData,
-                file_get_contents($this->schemas['client-compatibility']['file']))
-            ;
+        $this->schemaValidator->in(json_decode($json));
+        return true;
     }
 }

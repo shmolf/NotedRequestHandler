@@ -4,58 +4,42 @@ declare(strict_types=1);
 
 namespace shmolf\NotedRequestHandler;
 
-use Opis\JsonSchema\Resolvers\SchemaResolver;
-use Opis\JsonSchema\ValidationResult;
-use Opis\JsonSchema\Validator;
+use Exception;
 use shmolf\NotedRequestHandler\Entity\NoteEntity;
 use shmolf\NotedRequestHandler\Exception\InvalidSchemaException;
 use shmolf\NotedRequestHandler\JsonSchema\Library;
+use Swaggest\JsonSchema\Schema;
 
 class NoteHydrator
 {
     private const GET = 'GET';
     private const POST = 'POST';
+    private const PUT = 'PUT';
+    private const DELETE = 'DELETE';
 
     public const REQ_API_VERSION = 'noted-client-api-version';
     public const REQ_NOTE_UPSERT = 'noted-client-upsert';
 
-    private Validator $validator;
     private array $schemas;
     private ?bool $isCompatible = null;
 
     public function __construct()
     {
         $this->schemas = Library::getCurrent();
-        $this->validator = new Validator();
-        $resolver = $this->validator->resolver();
-
-        if ($resolver instanceof SchemaResolver) {
-            $resolver->registerFile(
-                $this->schemas['note']['uri'],
-                $this->schemas['note']['file']
-            );
-            $resolver->registerFile(
-                $this->schemas['host-compatibility']['uri'],
-                $this->schemas['host-compatibility']['file']
-            );
-            $resolver->registerFile(
-                $this->schemas['client-compatibility']['uri'],
-                $this->schemas['client-compatibility']['file']
-            );
-        }
     }
 
-    public function getHydratedNote(): ?NoteEntity
+    public function getHydratedNote(string $noteJson): ?NoteEntity
     {
-        $requestData = $this->getRequestValue(self::POST, self::REQ_NOTE_UPSERT, '');
-        $schemaValidation = $this->validateSchema($requestData, $this->schemas['note']['uri']);
-
-        if ($schemaValidation->hasError()) {
-            /** @psalm-suppress PossiblyNullArgument since 'hasError' prevents null referencing **/
-            throw new InvalidSchemaException($requestData, $schemaValidation->error());
+        try {
+            $this->validateSchema(
+                $noteJson,
+                $this->schemas['note']['file']
+            );
+        } catch (Exception $e) {
+            return null;
         }
 
-        $requestData = json_decode($requestData, true);
+        $requestData = json_decode($noteJson, true);
         $note = new NoteEntity();
         $note->title = $requestData['title'];
         $note->content = $requestData['content'];
@@ -69,22 +53,24 @@ class NoteHydrator
             $note->tags = $requestData['tags'];
         }
 
+        if (isset($requestData['inTrashcan'])) {
+            $note->inTrashcan = $requestData['inTrashcan'];
+        }
+
         return $note;
     }
 
     public function getCompatibilityJsonResponse(): string
     {
         return json_encode([
-            'isCompatible' => $this->versionIsSupported(),
+            'isCompatible' => $this->isCompatible ?? $this->versionIsSupported(),
             'version' => Library::CUR_VERSION,
         ]);
     }
 
     /**
-     * Your application controller should would call this function, when the browser makes a request to
-     * GET `your-host/api/v~/note/compatibility`
-     *
-     * Your controller should respond with a json response: `src/JsonSchemas/compatibility.json`
+     * Your application controller should would call this function, when the browser is checking compatibility.
+     * Your controller should respond with a json response: `src/JsonSchema/v1/host-compatibility.json`
      *
      * @return bool
      */
@@ -103,25 +89,25 @@ class NoteHydrator
     private function checkForBrowserSupport(): array
     {
         $requestData = (string)($this->getRequestValue(self::GET, self::REQ_API_VERSION, ''));
-        $schemaValidation = $this->validateSchema($requestData, $this->schemas['client-compatibility']['uri']);
 
-        if ($schemaValidation->hasError()) {
-            /** @psalm-suppress PossiblyNullArgument since 'hasError' prevents null referencing **/
-            throw new InvalidSchemaException($requestData, $schemaValidation->error());
+        try {
+            $this->validateSchema(
+                $requestData,
+                $this->schemas['client-compatibility']['file']
+            );
+        } catch (Exception $e) {
+            return [];
         }
 
         /** @psalm-suppress MixedArrayAccess since `['versions']` will be an array, per the schema **/
-        return $schemaValidation->isValid() ? json_decode($requestData, true)['versions'] : [];
+        return json_decode($requestData, true)['versions'];
     }
 
-    private function validateSchema(string $jsonString, string $uri): ValidationResult
+    private function validateSchema(string $jsonString, string $filePath): bool
     {
-        $resolver = $this->validator->resolver();
-
-        // We'll check if the $resolver is set, otherwise, we'll manully load the file.
-        return $resolver instanceof SchemaResolver
-            ? $this->validator->validate(json_decode($jsonString), $uri)
-            : $this->validator->validate(json_decode($jsonString), file_get_contents('./src/JsonSchemas/note.json'));
+        $schemaValidator = Schema::import(json_decode(file_get_contents($filePath)));
+        $schemaValidator->in(json_decode($jsonString));
+        return true;
     }
 
     /**

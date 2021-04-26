@@ -4,64 +4,57 @@ declare(strict_types=1);
 
 namespace shmolf\NotedRequestHandler\Tests;
 
-use Opis\JsonSchema\Helper;
-use Opis\JsonSchema\Resolvers\SchemaResolver;
-use Opis\JsonSchema\ValidationResult;
-use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use shmolf\NotedRequestHandler\JsonSchema\Library;
 use shmolf\NotedRequestHandler\Tests\DataObjects\Note;
+use Swaggest\JsonSchema\Exception\StringException;
+use Swaggest\JsonSchema\Schema;
 
 class NoteSchemaTest extends TestCase
 {
-    private Validator $validator;
+    private Schema $schemaValidator;
     private array $schemas;
 
     public function setUp(): void
     {
         $this->schemas = Library::getCurrent();
-        $this->validator = new Validator();
-        $resolver = $this->validator->resolver();
-
-        if ($resolver instanceof SchemaResolver) {
-            $resolver->registerFile($this->schemas['note']['uri'], $this->schemas['note']['file']);
-        }
+        $this->schemaValidator = Schema::import(
+            json_decode(
+                file_get_contents($this->schemas['note']['file'])
+            )
+        );
     }
 
     public function testNoteSchemaHappy(): void
     {
-        $validation = $this->validateSchema(Note::getHappy());
-        /** @psalm-suppress PossiblyNullReference since 'hasError' prevents null referencing **/
-        $msg = $validation->hasError() ? $validation->error()->message() : '';
+        $isValid = $this->validateSchema(json_encode(Note::getHappy()));
 
-        $this->assertTrue($validation->isValid(), $msg);
+        $this->assertTrue($isValid);
     }
 
-    public function testNoteSchemaSad(): void
+    public function testNoteSchemaSadMissProps(): void
     {
-        $validation = $this->validateSchema(Note::getSad());
-        /** @psalm-suppress PossiblyNullReference since 'hasError' prevents null referencing **/
-        $msg = $validation->hasError() ? $validation->error()->message() : '';
+        $isValid = $this->validateSchema(json_encode(Note::getSadMissingProperties()));
 
-        $this->assertTrue($validation->isValid(), $msg);
+        $this->assertTrue($isValid);
+    }
+
+    public function testNoteSchemaSadEmptyProps(): void
+    {
+        $isValid = $this->validateSchema(json_encode(Note::getSadEmptyProperties()));
+
+        $this->assertTrue($isValid);
     }
 
     public function testNoteSchemaBad(): void
     {
-        $validation = $this->validateSchema(Note::getBad());
-
-        $this->assertTrue($validation->hasError());
+        $this->expectException(StringException::class);
+        $this->validateSchema(json_encode(Note::getBad()));
     }
 
-    private function validateSchema(array $data): ValidationResult
+    private function validateSchema(string $json): bool
     {
-        $resolver = $this->validator->resolver();
-        /** @var array */
-        $preppedData = Helper::toJSON($data);
-
-        // We'll check if the $resolver is set, otherwise, we'll manully load the file.
-        return $resolver instanceof SchemaResolver
-            ? $this->validator->validate($preppedData, $this->schemas['note']['uri'])
-            : $this->validator->validate($preppedData, file_get_contents($this->schemas['note']['file']));
+        $this->schemaValidator->in(json_decode($json));
+        return true;
     }
 }
