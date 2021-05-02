@@ -16,6 +16,7 @@ class NoteEntity
     /** @var string[] */
     public array $tags = [];
     public bool $inTrashcan = false;
+    public bool $isDeleted = false;
 
     public function setNoteUuid(string $uuid): void
     {

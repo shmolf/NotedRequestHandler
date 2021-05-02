@@ -57,6 +57,10 @@ class NoteHydrator
             $note->inTrashcan = $requestData['inTrashcan'];
         }
 
+        if (isset($requestData['isDeleted'])) {
+            $note->isDeleted = $requestData['isDeleted'];
+        }
+
         return $note;
     }
 
