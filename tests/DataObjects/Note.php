@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace shmolf\NotedRequestHandler\Tests\DataObjects;
 
 class Note
@@ -18,12 +20,23 @@ class Note
         ];
     }
 
-    public static function getSad(): array
+    public static function getSadMissingProperties(): array
     {
         return [
             'clientUuid' => '0123abcd-45ef-46ab-a890-123456abcedf',
             'title' => 'test title',
             'content' => 'content',
+        ];
+    }
+
+    public static function getSadEmptyProperties(): array
+    {
+        return [
+            'noteUuid' => null,
+            'clientUuid' => null,
+            'title' => '',
+            'content' => '',
+            'tags' => [],
         ];
     }
 

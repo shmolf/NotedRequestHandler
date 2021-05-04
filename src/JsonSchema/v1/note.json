@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "id": "https://note-d.app/schema/v{version}/{file}.json",
+  "$vars": {
+    "file": "note",
+    "version": 1
+  },
+  "title": "Representation of a Note Object",
+  "type": "object",
+  "required": ["clientUuid", "title", "content"],
+  "additionalProperties": false,
+  "properties": {
+    "noteUuid": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "clientUuid": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "inTrashcan": {
+      "type": "boolean"
+    },
+    "isDeleted": {
+      "type": "boolean"
+    }
+  }
+}

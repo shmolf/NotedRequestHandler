@@ -18,6 +18,8 @@ the note application will attempt to query the host as to which schema version i
 
 For more information, please visit the [note'd Github repo](https://github.com/shmolf/noted).
 
+A [helpful website](https://www.jsonschemavalidator.net/) to self-check schema and data validity.
+
 ## Structure
 
 ```
