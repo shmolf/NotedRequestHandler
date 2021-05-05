@@ -1,12 +1,8 @@
 # Note'd Hydrator
-<!--
+
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
--->
+[![PHP Composer][ico-workflow-php]][link-workflow-php]
 
 The [note'd app](https://note-d.app) is/will be designed to allow the user to store notes
 on their own self-hosted server.  
@@ -59,7 +55,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT
 
 ## Security
 
-If you discover any security related issues, please email <a href="mailto:shmolf@gmail.com">the author</a> instead of using the issue tracker.
+If you discover any security related issues, please email [the author](mailto:shmolf@gmail.com) instead of using the issue tracker.
 
 ## Credits
 
@@ -67,21 +63,13 @@ If you discover any security related issues, please email <a href="mailto:shmolf
 - [All Contributors][link-contributors]
 
 ## License
-
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-<!--
-[ico-version]: https://img.shields.io/packagist/v/:vendor/:package_name.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/:vendor/:package_name/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/:vendor/:package_name.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/:vendor/:package_name.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/:vendor/:package_name.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/:vendor/:package_name
-[link-travis]: https://travis-ci.org/:vendor/:package_name
-[link-scrutinizer]: https://scrutinizer-ci.com/g/:vendor/:package_name/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/:vendor/:package_name
-[link-downloads]: https://packagist.org/packages/:vendor/:package_name
--->
+[ico-version]: https://img.shields.io/packagist/v/shmolf/noted-hydrator&style=flat-square
+[ico-license]: https://img.shields.io/github/license/shmolf/noted-hydrator?style=flat-square
+[ico-workflow-php]: https://github.com/shmolf/noted-hydrator/actions/workflows/php.yml/badge.svg?style=flat-square
+
+[link-packagist]: https://packagist.org/packages/shmolf/noted-hydrator
 [link-author]: https://github.com/shmolf
 [link-contributors]: ../../contributors
+[link-workflow-php]: https://github.com/shmolf/noted-hydrator/actions/workflows/php.yml
