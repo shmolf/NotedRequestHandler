@@ -1,12 +1,12 @@
 {
-  "name": "shmolf/noted-request-handler",
+  "name": "shmolf/noted-hydrator",
   "type": "library",
   "description": "Designed to receive requests from note-d.app, and objectify them.",
   "keywords": [
     "shmolf",
-    "noted-request-handler"
+    "noted-hydrator"
   ],
-  "homepage": "https://github.com/shmolf/noted-request-handler",
+  "homepage": "https://github.com/shmolf/noted-hydrator",
   "license": "MIT",
   "authors": [
     {
@@ -28,12 +28,12 @@
   },
   "autoload": {
     "psr-4": {
-      "shmolf\\NotedRequestHandler\\": "src"
+      "shmolf\\NotedHydrator\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "shmolf\\NotedRequestHandler\\Tests\\": "tests"
+      "shmolf\\NotedHydrator\\Tests\\": "tests"
     }
   },
   "scripts": {

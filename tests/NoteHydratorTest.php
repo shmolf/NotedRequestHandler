@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace shmolf\NotedRequestHandler\Tests;
+namespace shmolf\NotedHydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
-use shmolf\NotedRequestHandler\Entity\NoteEntity;
-use shmolf\NotedRequestHandler\JsonSchema\Library;
-use shmolf\NotedRequestHandler\NoteHydrator;
+use shmolf\NotedHydrator\Entity\NoteEntity;
+use shmolf\NotedHydrator\JsonSchema\Library;
+use shmolf\NotedHydrator\NoteHydrator;
 use Swaggest\JsonSchema\Exception\StringException;
 
 class NoteHydratorTest extends TestCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace shmolf\NotedRequestHandler\Tests\DataObjects;
+namespace shmolf\NotedHydrator\Tests\DataObjects;
 
 class ClientCompatibility
 {

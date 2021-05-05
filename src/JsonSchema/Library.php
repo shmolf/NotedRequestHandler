@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace shmolf\NotedRequestHandler\JsonSchema;
+namespace shmolf\NotedHydrator\JsonSchema;
 
 class Library
 {
@@ -11,7 +11,7 @@ class Library
     private const CUR_VERSION_PATH = '/v1';
     /** @var string `https://note-d.app/schemas/v1/note.json` */
     public const CUR_URI_PATH = self::PROTO_HOST . '/schemas' . self::CUR_VERSION_PATH;
-    /** @var string `/var/www/your-app/vendors/shmolf/noted-request-handler/src/JsonSchemas/v1/note.json` */
+    /** @var string */
     public const CUR_FILE_PATH = __DIR__ . self::CUR_VERSION_PATH;
 
     /**

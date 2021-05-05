@@ -1,4 +1,4 @@
-# noted-request-handler
+# Note'd Hydrator
 <!--
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -33,7 +33,7 @@ tests/
 Via Composer
 
 ``` bash
-$ composer require shmolf/noted-request-handler
+$ composer require shmolf/noted-hydrator
 ```
 
 ## Usage

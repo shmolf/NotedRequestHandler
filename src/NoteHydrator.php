@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace shmolf\NotedRequestHandler;
+namespace shmolf\NotedHydrator;
 
 use Exception;
-use shmolf\NotedRequestHandler\Entity\NoteEntity;
-use shmolf\NotedRequestHandler\Exception\InvalidSchemaException;
-use shmolf\NotedRequestHandler\JsonSchema\Library;
+use shmolf\NotedHydrator\Entity\NoteEntity;
+use shmolf\NotedHydrator\Exception\InvalidSchemaException;
+use shmolf\NotedHydrator\JsonSchema\Library;
 use Swaggest\JsonSchema\Schema;
 
 class NoteHydrator

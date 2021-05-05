@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace shmolf\NotedRequestHandler\Tests;
+namespace shmolf\NotedHydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
-use shmolf\NotedRequestHandler\JsonSchema\Library;
-use shmolf\NotedRequestHandler\Tests\DataObjects\Note;
+use shmolf\NotedHydrator\JsonSchema\Library;
+use shmolf\NotedHydrator\Tests\DataObjects\Note;
 use Swaggest\JsonSchema\Exception\StringException;
 use Swaggest\JsonSchema\Schema;
 

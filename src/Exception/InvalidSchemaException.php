@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace shmolf\NotedRequestHandler\Exception;
+namespace shmolf\NotedHydrator\Exception;
 
 use Exception;
 use Opis\JsonSchema\Errors\ValidationError;

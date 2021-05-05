@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace shmolf\NotedRequestHandler\Entity;
+namespace shmolf\NotedHydrator\Entity;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
