@@ -9,10 +9,11 @@ use shmolf\NotedHydrator\JsonSchema\Library;
 use shmolf\NotedHydrator\Tests\DataObjects\Compatibility;
 use Swaggest\JsonSchema\Exception\TypeException;
 use Swaggest\JsonSchema\Schema;
+use Swaggest\JsonSchema\SchemaContract;
 
 class CompatibilitySchemaTest extends TestCase
 {
-    private Schema $schemaValidator;
+    private SchemaContract $schemaValidator;
     private array $schemas;
 
     public function setUp(): void

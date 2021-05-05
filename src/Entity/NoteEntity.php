@@ -9,14 +9,25 @@ use Ramsey\Uuid\UuidInterface;
 
 class NoteEntity
 {
-    public ?UuidInterface $noteUuid = null;
-    public ?UuidInterface $clientUuid = null;
-    public string $title;
-    public string $content;
+    public ?UuidInterface $noteUuid;
+    public ?UuidInterface $clientUuid;
+    public ?string $title;
+    public ?string $content;
     /** @var string[] */
     public array $tags = [];
-    public bool $inTrashcan = false;
-    public bool $isDeleted = false;
+    public bool $inTrashcan;
+    public bool $isDeleted;
+
+    public function __construct()
+    {
+        $this->noteUuid = null;
+        $this->clientUuid = null;
+        $this->title = null;
+        $this->content = null;
+        $this->tags = [];
+        $this->inTrashcan = false;
+        $this->isDeleted = false;
+    }
 
     public function setNoteUuid(string $uuid): void
     {
