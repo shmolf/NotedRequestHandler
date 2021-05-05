@@ -2,6 +2,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
+[![PHP Composer][ico-workflow-php]][link-workflow-php]
 
 The [note'd app](https://note-d.app) is/will be designed to allow the user to store notes
 on their own self-hosted server.  
@@ -66,7 +67,9 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 [ico-version]: https://img.shields.io/packagist/v/shmolf/noted-hydrator&style=flat-square
 [ico-license]: https://img.shields.io/github/license/shmolf/noted-hydrator?style=flat-square
+[ico-workflow-php]: https://github.com/shmolf/noted-hydrator/actions/workflows/php.yml/badge.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/shmolf/noted-hydrator
 [link-author]: https://github.com/shmolf
 [link-contributors]: ../../contributors
+[link-workflow-php]: https://github.com/shmolf/noted-hydrator/actions/workflows/php.yml
