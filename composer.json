@@ -49,11 +49,6 @@
     ],
     "psalm-more-info": "psalm --php-version=7.4 --show-info=true"
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0-dev"
-    }
-  },
   "config": {
     "sort-packages": true
   }
