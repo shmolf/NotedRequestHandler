@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Total Downloads][ico-downloads]][link-downloads]
 
 The [note'd app](https://note-d.app) is/will be designed to allow the user to store notes
 on their own self-hosted server.  
@@ -55,7 +54,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT
 
 ## Security
 
-If you discover any security related issues, please email <a href="mailto:shmolf@gmail.com">the author</a> instead of using the issue tracker.
+If you discover any security related issues, please email [the author](mailto:shmolf@gmail.com) instead of using the issue tracker.
 
 ## Credits
 
@@ -63,13 +62,11 @@ If you discover any security related issues, please email <a href="mailto:shmolf
 - [All Contributors][link-contributors]
 
 ## License
-
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-[ico-version]: https://img.shields.io/packagist/v/shmolf/noted-hydrator.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/shmolf/noted-hydrator.svg?style=flat-square
+
+[ico-version]: https://img.shields.io/packagist/v/shmolf/noted-hydrator&style=flat-square
+[ico-license]: https://img.shields.io/github/license/shmolf/noted-hydrator?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/shmolf/noted-hydrator
-[link-downloads]: https://packagist.org/packages/shmolf/noted-hydrator
 [link-author]: https://github.com/shmolf
 [link-contributors]: ../../contributors
