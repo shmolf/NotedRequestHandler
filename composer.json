@@ -16,6 +16,7 @@
       "role": "Developer"
     }
   ],
+  "minimum-stability": "stable",
   "require": {
     "php": ">=7.4",
     "ramsey/uuid": "^4.1",
