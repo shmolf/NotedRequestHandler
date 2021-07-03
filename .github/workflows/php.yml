@@ -1,10 +1,9 @@
-name: PHP Composer
+name: Linting & Tests
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   build:
