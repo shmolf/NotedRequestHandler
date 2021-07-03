@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use shmolf\NotedHydrator\JsonSchema\Library;
 use shmolf\NotedHydrator\Tests\DataObjects\Note;
 use Swaggest\JsonSchema\Exception\StringException;
+use Swaggest\JsonSchema\Exception\TypeException;
 use Swaggest\JsonSchema\Schema;
 use Swaggest\JsonSchema\SchemaContract;
 
@@ -49,7 +50,7 @@ class NoteSchemaTest extends TestCase
 
     public function testNoteSchemaBad(): void
     {
-        $this->expectException(StringException::class);
+        $this->expectException(TypeException::class);
         $this->validateSchema(json_encode(Note::getBad()));
     }
 

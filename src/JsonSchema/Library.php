@@ -7,8 +7,8 @@ namespace shmolf\NotedHydrator\JsonSchema;
 class Library
 {
     private const PROTO_HOST = 'https://note-d.app';
-    public const CUR_VERSION = 1;
-    private const CUR_VERSION_PATH = '/v1';
+    public const CUR_VERSION = 2;
+    private const CUR_VERSION_PATH = '/v2';
     /** @var string `https://note-d.app/schemas/v1/note.json` */
     public const CUR_URI_PATH = self::PROTO_HOST . '/schemas' . self::CUR_VERSION_PATH;
     /** @var string */
@@ -37,6 +37,23 @@ class Library
 
     public static function getAlternatives(): array
     {
-        return [];
+        $v1 = '/v1';
+        $v1Uri = self::PROTO_HOST . "/schemas{$v1}";
+        $v1Path = __DIR__ . $v1;
+
+        return [
+            'note' => [
+                'uri' => "{$v1Uri}/note.json",
+                'file' => "{$v1Path}/note.json",
+            ],
+            'host-compatibility' => [
+                'uri' => "{$v1Uri}/host-compatibility.json",
+                'file' =>  "{$v1Path}/host-compatibility.json",
+            ],
+            'client-compatibility' => [
+                'uri' => "{$v1Uri}/client-compatibility.json",
+                'file' =>  "{$v1Path}/client-compatibility.json",
+            ],
+        ];
     }
 }

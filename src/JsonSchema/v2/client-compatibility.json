@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "id": "https://note-d.app/schema/v{version}/{file}.json",
+  "$vars": {
+    "file": "client-compatibility",
+    "version": 2
+  },
+  "title": "API Version Compatility",
+  "type": "object",
+  "required": ["versions"],
+  "additionalProperties": false,
+  "properties": {
+    "versions": {
+      "type": "array",
+      "description": "An integer array of API versions the browser-client is compatible with.",
+      "contains": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}

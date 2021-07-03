@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "id": "https://note-d.app/schema/v{version}/{file}.json",
+  "$vars": {
+    "file": "note",
+    "version": 2
+  },
+  "title": "Representation of a Note Object",
+  "type": "object",
+  "required": ["title", "content"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "inTrashcan": {
+      "type": "boolean"
+    },
+    "isDeleted": {
+      "type": "boolean"
+    }
+  }
+}
