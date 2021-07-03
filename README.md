@@ -65,7 +65,7 @@ If you discover any security related issues, please email [the author](mailto:sh
 ## License
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/shmolf/noted-hydrator&style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/shmolf/noted-hydrator?style=flat-square
 [ico-license]: https://img.shields.io/github/license/shmolf/noted-hydrator?style=flat-square
 [ico-workflow-php]: https://github.com/shmolf/noted-hydrator/actions/workflows/php.yml/badge.svg?style=flat-square
 
