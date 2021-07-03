@@ -43,11 +43,6 @@ class NoteHydrator
         $note = new NoteEntity();
         $note->title = $requestData['title'];
         $note->content = $requestData['content'];
-        $note->setClientUuid($requestData['clientUuid']);
-
-        if (!empty($requestData['noteUuid'])) {
-            $note->setNoteUuid($requestData['noteUuid']);
-        }
 
         if (!empty($requestData['tags'])) {
             $note->tags = $requestData['tags'];

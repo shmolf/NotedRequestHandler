@@ -78,7 +78,7 @@ class NoteHydratorTest extends TestCase
     public function testClientVersionSad(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [1],
+            'versions' => [Library::CUR_VERSION],
         ]);
 
         $this->assertTrue($this->hydrator->versionIsSupported());
@@ -112,19 +112,13 @@ class NoteHydratorTest extends TestCase
 
     public function testNoteHydrationHappy(): void
     {
-        $goodUuid = 'e0f9d9cf-02b3-4b8a-b5c0-ea094c07b0b9';
-
         $noteArray = [
-            'noteUuid' => $goodUuid,
-            'clientUuid' => $goodUuid,
             'title' => 'test title',
             'content' => 'test content',
             'tags' => ['tag 1', 'tag 2'],
         ];
 
         $testNote = new NoteEntity();
-        $testNote->setNoteUuid($goodUuid);
-        $testNote->setClientUuid($goodUuid);
         $testNote->title = $noteArray['title'];
         $testNote->content = $noteArray['content'];
         $testNote->tags = $noteArray['tags'];
@@ -137,16 +131,12 @@ class NoteHydratorTest extends TestCase
 
     public function testNoteHydrationSad(): void
     {
-        $goodUuid = 'e0f9d9cf-02b3-4b8a-b5c0-ea094c07b0b9';
-
         $noteArray = [
-            'clientUuid' => $goodUuid,
             'title' => 'test title',
             'content' => 'test content',
         ];
 
         $testNote = new NoteEntity();
-        $testNote->setClientUuid($goodUuid);
         $testNote->title = $noteArray['title'];
         $testNote->content = $noteArray['content'];
 
@@ -154,27 +144,5 @@ class NoteHydratorTest extends TestCase
         $generatedNote = $this->hydrator->getHydratedNote($noteJson);
 
         $this->assertEquals($testNote, $generatedNote);
-    }
-
-    public function testNoteHydrationBad(): void
-    {
-        $badUuid = 'this is not a valid uuid string';
-
-        // Missing a Client UUID
-        $noteArray = [
-            'clientUuid' => $badUuid,
-            'title' => 'test title',
-            'content' => 'test content',
-            'tags' => ['tag 1', 'tag 2'],
-        ];
-
-        $testNote = new NoteEntity();
-        $testNote->setClientUuid($badUuid);
-        $testNote->title = $noteArray['title'];
-        $testNote->content = $noteArray['content'];
-        $testNote->tags = $noteArray['tags'];
-
-        $noteJson = json_encode($noteArray);
-        $this->assertNull($this->hydrator->getHydratedNote($noteJson));
     }
 }

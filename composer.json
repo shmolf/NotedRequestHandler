@@ -19,7 +19,6 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.4",
-    "ramsey/uuid": "^4.1",
     "swaggest/json-schema": "^0.12.31"
   },
   "require-dev": {
