@@ -7,7 +7,7 @@
   },
   "title": "Representation of a Note Object",
   "type": "object",
-  "required": ["uuid", "title", "content"],
+  "required": ["title", "content"],
   "additionalProperties": false,
   "properties": {
     "uuid": {
