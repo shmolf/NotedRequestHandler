@@ -1,3 +1,15 @@
+## [2.1.0](https://github.com/shmolf/noted-hydrator/compare/v2.0.0...v2.1.0) (2021-07-06)
+
+
+### Features
+
+* **note schema:** add `uuid` property to v2/note schema ([58c3ea9](https://github.com/shmolf/noted-hydrator/commit/58c3ea93c0d0486ec67a4097d1c389ddc3cb3830))
+
+
+### Bug Fixes
+
+* **note|schema:** `uuid` is part of the entity, but not required ([a822af3](https://github.com/shmolf/noted-hydrator/commit/a822af32e44f0e6b3309a7d4d0096f3404b63ee5))
+
 ## [2.0.0](https://github.com/shmolf/noted-hydrator/compare/v1.1.0...v2.0.0) (2021-07-03)
 
 
