@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace shmolf\NotedHydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
-use shmolf\NotedHydrator\JsonSchema\Library;
+use shmolf\NotedHydrator\JsonSchema\BaseLibrary;
+use shmolf\NotedHydrator\JsonSchema\v2\Library;
 use shmolf\NotedHydrator\Tests\DataObjects\Compatibility;
 use Swaggest\JsonSchema\Exception\TypeException;
 use Swaggest\JsonSchema\Schema;
@@ -14,14 +15,14 @@ use Swaggest\JsonSchema\SchemaContract;
 class CompatibilitySchemaTest extends TestCase
 {
     private SchemaContract $schemaValidator;
-    private array $schemas;
+    private BaseLibrary $library;
 
     public function setUp(): void
     {
-        $this->schemas = Library::getCurrent();
+        $this->library = new Library();
         $this->schemaValidator = Schema::import(
             json_decode(
-                file_get_contents($this->schemas['host-compatibility']['file'])
+                file_get_contents($this->library->hostCompatibilitySchemaFilePath()),
             )
         );
     }
