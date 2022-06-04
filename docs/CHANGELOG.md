@@ -1,3 +1,19 @@
+## [3.0.0](https://github.com/shmolf/noted-hydrator/compare/v2.1.0...v3.0.0) (2022-06-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* reorganize the code a little and allow dependency injection
+
+### Features
+
+* reorganize the code a little and allow dependency injection ([df10c30](https://github.com/shmolf/noted-hydrator/commit/df10c3046aa39af11e7e3070f7b7a70fdef805bb))
+
+
+### Bug Fixes
+
+* **psalm:** reorganize variable definition, for better static analysis ([ba49ed9](https://github.com/shmolf/noted-hydrator/commit/ba49ed94cac1df1c8ee521450873650e59e95ebb))
+
 ## [2.1.0](https://github.com/shmolf/noted-hydrator/compare/v2.0.0...v2.1.0) (2021-07-06)
 
 
