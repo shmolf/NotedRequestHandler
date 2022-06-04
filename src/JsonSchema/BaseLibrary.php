@@ -7,6 +7,7 @@ namespace shmolf\NotedHydrator\JsonSchema;
 abstract class BaseLibrary
 {
     private const PROTO_HOST = 'https://note-d.app';
+    protected const VERSION = 0;
 
     protected string $protoHost;
     protected string $version;
@@ -19,6 +20,8 @@ abstract class BaseLibrary
     public function __construct(?string $schemaHost = null)
     {
         $this->protoHost = $schemaHost ?? getenv('NOTED_SCHEMA_HOST') ?: self::PROTO_HOST;
+        $this->version = 'v' . $this::VERSION;
+        $this->apiVersion = $this::VERSION;
     }
 
     public function noteSchemaFilePath(): string
