@@ -7,37 +7,31 @@ namespace shmolf\NotedHydrator;
 use Exception;
 use shmolf\NotedHydrator\Entity\NoteEntity;
 use shmolf\NotedHydrator\Exception\InvalidSchemaException;
-use shmolf\NotedHydrator\JsonSchema\Library;
+use shmolf\NotedHydrator\JsonSchema\BaseLibrary;
 use Swaggest\JsonSchema\Schema;
 
 class NoteHydrator
 {
     private const GET = 'GET';
     private const POST = 'POST';
-    private const PUT = 'PUT';
-    private const DELETE = 'DELETE';
 
     public const REQ_API_VERSION = 'noted-client-api-version';
     public const REQ_NOTE_UPSERT = 'noted-client-upsert';
 
-    private array $schemas;
     private ?bool $isCompatible = null;
+    private BaseLibrary $library;
 
-    public function __construct()
+    public function __construct(BaseLibrary $library)
     {
-        $this->schemas = Library::getCurrent();
+        $this->library = $library;
     }
 
     public function getHydratedNote(string $noteJson): ?NoteEntity
     {
-        try {
-            $this->validateSchema(
-                $noteJson,
-                $this->schemas['note']['file']
-            );
-        } catch (Exception $e) {
-            return null;
-        }
+        $this->validateSchema(
+            $noteJson,
+            $this->library->noteSchemaFilePath(),
+        );
 
         $requestData = json_decode($noteJson, true);
         $note = new NoteEntity();
@@ -62,8 +56,8 @@ class NoteHydrator
     public function getCompatibilityJsonResponse(): string
     {
         return json_encode([
-            'isCompatible' => $this->isCompatible ?? $this->versionIsSupported(),
-            'version' => Library::CUR_VERSION,
+            'isCompatible' => $this->versionIsSupported(),
+            'version' => $this->library->apiVersion,
         ]);
     }
 
@@ -75,7 +69,7 @@ class NoteHydrator
      */
     public function versionIsSupported(): bool
     {
-        $this->isCompatible = $this->isCompatible ?? in_array(Library::CUR_VERSION, $this->checkForBrowserSupport());
+        $this->isCompatible ??= in_array($this->library->apiVersion, $this->checkForBrowserSupport());
         return $this->isCompatible;
     }
 
@@ -92,7 +86,7 @@ class NoteHydrator
         try {
             $this->validateSchema(
                 $requestData,
-                $this->schemas['client-compatibility']['file']
+                $this->library->clientCompatibilitySchemaFilePath(),
             );
         } catch (Exception $e) {
             return [];

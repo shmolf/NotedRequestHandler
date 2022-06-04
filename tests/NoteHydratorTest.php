@@ -6,17 +6,19 @@ namespace shmolf\NotedHydrator\Tests;
 
 use PHPUnit\Framework\TestCase;
 use shmolf\NotedHydrator\Entity\NoteEntity;
-use shmolf\NotedHydrator\JsonSchema\Library;
+use shmolf\NotedHydrator\JsonSchema\BaseLibrary;
+use shmolf\NotedHydrator\JsonSchema\v2\Library;
 use shmolf\NotedHydrator\NoteHydrator;
-use Swaggest\JsonSchema\Exception\StringException;
 
 class NoteHydratorTest extends TestCase
 {
     private NoteHydrator $hydrator;
+    private BaseLibrary $library;
 
     public function setUp(): void
     {
-        $this->hydrator = new NoteHydrator();
+        $this->library = new Library();
+        $this->hydrator = new NoteHydrator($this->library);
     }
 
     public function tearDown(): void
@@ -27,12 +29,12 @@ class NoteHydratorTest extends TestCase
     public function testServerVersionResponseHappy(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [Library::CUR_VERSION],
+            'versions' => [$this->library->apiVersion],
         ]);
 
         $libraryVersionJson = json_encode([
             'isCompatible' => true,
-            'version' => Library::CUR_VERSION,
+            'version' => $this->library->apiVersion,
         ]);
 
         $this->assertEquals($libraryVersionJson, $this->hydrator->getCompatibilityJsonResponse());
@@ -41,12 +43,12 @@ class NoteHydratorTest extends TestCase
     public function testServerVersionResponseSad(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [(Library::CUR_VERSION + 1)],
+            'versions' => [($this->library->apiVersion + 1)],
         ]);
 
         $libraryVersionJson = json_encode([
             'isCompatible' => false,
-            'version' => Library::CUR_VERSION,
+            'version' => $this->library->apiVersion,
         ]);
 
         $this->assertEquals($libraryVersionJson, $this->hydrator->getCompatibilityJsonResponse());
@@ -55,12 +57,12 @@ class NoteHydratorTest extends TestCase
     public function testServerVersionResponseBad(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [Library::CUR_VERSION],
+            'versions' => [$this->library->apiVersion],
         ]);
 
         $libraryVersionJson = json_encode([
             'isCompatible' => 'true',
-            'version' => Library::CUR_VERSION,
+            'version' => $this->library->apiVersion,
         ]);
 
         $this->assertNotEquals($libraryVersionJson, $this->hydrator->getCompatibilityJsonResponse());
@@ -78,7 +80,7 @@ class NoteHydratorTest extends TestCase
     public function testClientVersionSad(): void
     {
         $_GET[NoteHydrator::REQ_API_VERSION] = json_encode([
-            'versions' => [Library::CUR_VERSION],
+            'versions' => [$this->library->apiVersion],
         ]);
 
         $this->assertTrue($this->hydrator->versionIsSupported());

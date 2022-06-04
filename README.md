@@ -32,6 +32,12 @@ Via Composer
 $ composer require shmolf/noted-hydrator
 ```
 
+If the `NOTED_SCHEMA_HOST` environment variable is specified
+```
+# Default value, if not specified
+NOTED_SCHEMA_HOST="https://note-d.app"
+```
+
 ## Usage
 
 ``` php
@@ -40,8 +46,7 @@ $ composer require shmolf/noted-hydrator
 
 ## Change log
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.  
-_This file will **eventually** be auto-generated._
+Please see [CHANGELOG](docs/CHANGELOG.md) for more information on what has changed recently.
 
 ## Testing
 
@@ -55,7 +60,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT
 
 ## Security
 
-If you discover any security related issues, please email [the author](mailto:shmolf@gmail.com) instead of using the issue tracker.
+If you discover any security related issues, please email [the author](mailto:shmolf@gmail.com)
+instead of using the issue tracker.
 
 ## Credits
 
