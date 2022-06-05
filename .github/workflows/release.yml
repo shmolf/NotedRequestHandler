@@ -43,11 +43,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: npm i
+      - run: npx yarn install --check-cache
 
   release:
     needs: dependency-cache-node
@@ -60,7 +60,7 @@ jobs:
 
       - name: Install NPM Packages
         if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm i
+        run: npx yarn install --check-cache
 
       - name: Semantic Release
         env:
